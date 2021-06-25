@@ -7,9 +7,11 @@ import {
   CardContent,
   TextField,
   CircularProgress,
-  FormHelperText
+  FormHelperText,
+  IconButton
 } from '@material-ui/core'
 import { Alert } from '@material-ui/lab'
+import { Delete } from '@material-ui/icons'
 
 import { api } from "./data"
 import { validateInput } from "./utils/validators"
@@ -25,9 +27,12 @@ function App() {
 
   useEffect(() => {
     api.get("/cards")
-      .then(({ data }) => setCards(data))
+      .then(({ data }) => {
+        setCards(data)
+        setLoading(false)
+      })
       .catch(({ message }) => setErrorMessage(`oops, something went wrong: ${message}`))
-      .finally(setLoading(false))
+    // .finally(setLoading(false))
   }, [])
 
   useEffect(() => {
@@ -71,18 +76,45 @@ function App() {
     }
   }
 
+  const deleteCard = async (id, index) => {
+    // set loading state
+    setLoading(true)
+
+    try {
+      // send DELETE request to delete path on backend
+      // pass in the id
+
+      await api.delete(`/cards/${id}`)
+      // cool, the request was successful
+      // remove the card from the react state
+      const cardsCopy = [...cards]
+      cardsCopy.splice(index, 1)
+      setCards(cardsCopy)
+
+    } catch ({ message }) {
+      setErrorMessage(message)
+    } finally {
+      // unset loading state
+      setLoading(false)
+    }
+
+  }
+
   return (
     <Box>
       <Typography component="h1" variant="h4">trello clone</Typography>
       {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
       {loading && <CircularProgress />}
 
-      {cards.map(({ title, description, id }) => (
+      {cards.map(({ title, description, id }, index) => (
         <Box key={id}>
           <Card variant="outlined">
             <CardContent>
               <Typography>title: {title}</Typography>
               <Typography>description: {description}</Typography>
+              <IconButton onClick={() => deleteCard(id, index)}>
+                <Delete />
+              </IconButton>
             </CardContent>
           </Card>
         </Box>
