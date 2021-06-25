@@ -29,10 +29,9 @@ function App() {
     api.get("/cards")
       .then(({ data }) => {
         setCards(data)
-        setLoading(false)
       })
       .catch(({ message }) => setErrorMessage(`oops, something went wrong: ${message}`))
-    // .finally(setLoading(false))
+      .finally(() => setLoading(false))
   }, [])
 
   useEffect(() => {
@@ -97,7 +96,6 @@ function App() {
       // unset loading state
       setLoading(false)
     }
-
   }
 
   return (
