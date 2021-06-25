@@ -31,7 +31,7 @@ function App() {
         setCards(data)
       })
       .catch(({ message }) => setErrorMessage(`oops, something went wrong: ${message}`))
-      .finally(setLoading(false))
+      .finally(() => setLoading(false))
   }, [])
 
   useEffect(() => {
