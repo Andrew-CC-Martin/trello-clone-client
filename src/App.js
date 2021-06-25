@@ -96,6 +96,7 @@ function App() {
       // unset loading state
       setLoading(false)
     }
+
   }
 
   return (
