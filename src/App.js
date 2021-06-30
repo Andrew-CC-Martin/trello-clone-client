@@ -11,6 +11,7 @@ import { NavBar } from './scenes/nav'
 
 const App = () => {
 
+
   return (
     <Router>
         <NavBar />
