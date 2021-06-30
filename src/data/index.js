@@ -15,6 +15,11 @@ export const setApiUrl = (apiUrls) => {
 
 const apiUrl = setApiUrl(apiUrls)
 
+const jwt = localStorage.getItem('jwt')
+
 export const api = axios.create({
-  baseURL: apiUrl
+  baseURL: apiUrl,
+  headers: {
+    "Authorization": `Bearer ${jwt}`
+  }
 })
