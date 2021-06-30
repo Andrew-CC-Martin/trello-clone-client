@@ -100,7 +100,6 @@ export const Home = () => {
 
   return (
     <Box>
-      <Typography component="h1" variant="h4">trello clone</Typography>
       {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
       {loading && <CircularProgress />}
 
