@@ -15,11 +15,15 @@ export const setApiUrl = () => {
 
 const apiUrl = setApiUrl()
 
-const jwt = localStorage.getItem('jwt')
 
 export const api = axios.create({
-  baseURL: apiUrl,
-  headers: {
-    "Authorization": `Bearer ${jwt}`
+  baseURL: apiUrl
+})
+
+api.interceptors.request.use((req) => {
+  const jwt = localStorage.getItem('jwt')
+  if (jwt) {
+    req.headers["Authorization"] = `Bearer ${jwt}`
   }
+  return req
 })
