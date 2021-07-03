@@ -10,3 +10,8 @@ export const validateInput = (input) => {
 
   return valid
 }
+
+export const validateEmail = (email) => {
+  const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i
+  return emailRegex.test(email)
+}

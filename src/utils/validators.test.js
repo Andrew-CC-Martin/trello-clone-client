@@ -1,4 +1,4 @@
-import { validateInput } from "./validators"
+import { validateInput, validateEmail, validatePassword } from "./validators"
 
 describe("validateInput", () => {
   test("It returns false if bad words are present", () => {
@@ -10,3 +10,18 @@ describe("validateInput", () => {
     expect(validateInput("hello there")).toBe(true)
   })
 })
+
+describe("validateEmail", () => {
+  test("it allows valid email addresses", () => {
+    const validAddress = "email123@gmail.com"
+    expect(validateEmail(validAddress)).toBe(true)
+  })
+
+  test("It rejects invalid email addresses", () => {
+    const invalidAddresses = ["hello", "email.com", "something@somethingelse"]
+    invalidAddresses.forEach((address) => {
+      expect(validateEmail(address)).toBe(false)
+    })
+  })
+})
+
