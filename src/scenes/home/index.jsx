@@ -120,7 +120,7 @@ export const Home = () => {
       <form onSubmit={addCard}>
         <TextField error={!titleValid} onChange={(e) => setTitle(e.target.value)} value={title} id="title" label="Title" />
         <TextField error={!descriptionValid} onChange={(e) => setDescription(e.target.value)} value={description} id="description" label="Description" />
-        <Button disabled={!titleValid || !descriptionValid} type="submit">Add card</Button>
+        <Button variant="contained" disabled={!titleValid || !descriptionValid} type="submit">Add card</Button>
         <FormHelperText error={!titleValid || !descriptionValid}>Please don't use any naughty words</FormHelperText>
       </form>
     </Box>

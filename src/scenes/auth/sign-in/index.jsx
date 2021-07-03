@@ -59,7 +59,7 @@ export const SignIn = () => {
           label="Password"
           type="password"
         />
-        <Button type="submit">Sign In</Button>
+        <Button variant="contained" type="submit">Sign In</Button>
       </form>
     </>
   )
