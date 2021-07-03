@@ -3,11 +3,14 @@ import {
   Button,
   TextField,
   CircularProgress,
+  FormHelperText
 } from '@material-ui/core'
 import { Alert } from '@material-ui/lab'
 import { useHistory } from "react-router-dom"
 
 import { api } from '../../../data'
+import { useEffect } from "react"
+import { validatePassword, validateEmail } from "../../../utils/validators"
 
 export const SignUp = () => {
   const [username, setUsername] = useState("")
@@ -16,8 +19,38 @@ export const SignUp = () => {
   const [passwordConfirmation, setPasswordConfirmation] = useState("")
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
+  const [passwordValid, setPasswordValid] = useState(true)
+  const [emailValid, setEmailValid] = useState(true)
+  const [passwordConfirmationMatches, setPasswordConfirmationMatches] = useState(true)
+
+  // when password changes, run it through the password validator function
+  // If it's invalid, set passwordValid to false
+  useEffect(() => {
+    setPasswordValid(validatePassword(password))
+  }, [password])
+
+  // when email changes, run it through the email validator function
+  // If it's invalid, set emailValid to false
+  useEffect(() => {
+    setEmailValid(validateEmail(email))
+  }, [email])
+
+  // when password changes, or passwordConfirmation changes, compare the two
+  // If equal, set passwordConfirmationMatches to true, else set to false
+  useEffect(() => {
+    setPasswordConfirmationMatches(password === passwordConfirmation)
+  }, [password, passwordConfirmation])
 
   const history = useHistory()
+
+  /**
+   *  form is invalid if
+   * - email is invalid
+   * - password is invalid
+   * - password confirmation doesn't match password
+   * - username is missing
+   *  */
+  const formInvalid = !emailValid || !passwordValid || !passwordConfirmationMatches || !username
 
   // sends username, email, password, and password_confirmation to the backend /auth/sign_up route
   const signUp = async (e) => {
@@ -55,14 +88,30 @@ export const SignUp = () => {
       {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
       {loading && <CircularProgress />}
       <form onSubmit={signUp}>
-        <TextField onChange={(e) => setUsername(e.target.value)} value={username} id="username" label="Username" />
-        <TextField onChange={(e) => setEmail(e.target.value)} value={email} id="email" label="Email" />
+        <TextField
+          onChange={(e) => setUsername(e.target.value)}
+          value={username}
+          id="username"
+          label="Username"
+          error={!username}
+          helperText="required"
+        />
+        <TextField
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+          id="email"
+          label="Email"
+          error={!emailValid}
+          helperText="valid email required"
+        />
         <TextField
           onChange={(e) => setPassword(e.target.value)}
           value={password}
           id="password"
           label="Password"
           type="password"
+          error={!passwordValid}
+          helperText="strong password required"
         />
         <TextField
           onChange={(e) => setPasswordConfirmation(e.target.value)}
@@ -70,8 +119,18 @@ export const SignUp = () => {
           id="passwordConfirmation"
           label="Confirm password"
           type="password"
+          error={!passwordConfirmationMatches}
+          helperText="passwords must match"
         />
-        <Button type="submit">Sign Up</Button>
+        <FormHelperText error={!passwordValid}>
+          Strong password must contain at least:
+          -8 characters
+          -1 number
+          -1 lowercase letter
+          -1 uppercase letter
+        </FormHelperText>
+
+        <Button variant="contained" disabled={formInvalid} type="submit">Sign Up</Button>
       </form>
     </>
   )
