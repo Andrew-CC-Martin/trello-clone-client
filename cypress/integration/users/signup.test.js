@@ -43,17 +43,4 @@ describe("User signup", () => {
     // button should be disabled sue to lack of username
     cy.get('[data-cy=signup-button]').should("be.disabled")
   })
-
-  it("Requires a valid email", () => {
-    // navigate to sign up page
-    cy.visit("/sign-up")
-    // fill out the fields with valid info
-    cy.get('[data-cy=signup-username]').type("Guy Cool" + Date.now())
-    cy.get('[data-cy=signup-email]').type(`guycool${Date.now()}@gmail`)
-    cy.get('[data-cy=signup-password]').type("Banana1!")
-    cy.get('[data-cy=signup-passwordConfirmation]').type("Banana1!")
-
-    // button should be disabled sue to lack of username
-    cy.get('[data-cy=signup-button]').should("be.disabled")
-  })
 })
