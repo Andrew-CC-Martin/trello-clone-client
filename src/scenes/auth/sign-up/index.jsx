@@ -95,6 +95,7 @@ export const SignUp = () => {
           label="Username"
           error={!username}
           helperText="required"
+          data-cy="signup-username"
         />
         <TextField
           onChange={(e) => setEmail(e.target.value)}
@@ -103,6 +104,7 @@ export const SignUp = () => {
           label="Email"
           error={!emailValid}
           helperText="valid email required"
+          data-cy="signup-email"
         />
         <TextField
           onChange={(e) => setPassword(e.target.value)}
@@ -112,6 +114,7 @@ export const SignUp = () => {
           type="password"
           error={!passwordValid}
           helperText="strong password required"
+          data-cy="signup-password"
         />
         <TextField
           onChange={(e) => setPasswordConfirmation(e.target.value)}
@@ -121,6 +124,7 @@ export const SignUp = () => {
           type="password"
           error={!passwordConfirmationMatches}
           helperText="passwords must match"
+          data-cy="signup-passwordConfirmation"
         />
         <FormHelperText error={!passwordValid}>
           Strong password must contain at least:
@@ -130,7 +134,7 @@ export const SignUp = () => {
           -1 uppercase letter
         </FormHelperText>
 
-        <Button variant="contained" disabled={formInvalid} type="submit">Sign Up</Button>
+        <Button variant="contained" disabled={formInvalid} type="submit" data-cy="signup-button">Sign Up</Button>
       </form>
     </>
   )
