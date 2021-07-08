@@ -13,8 +13,14 @@ import {
 import { Alert } from '@material-ui/lab'
 import { Delete } from '@material-ui/icons'
 
+import React from 'react'
+import Modal from 'react-modal'
+
 import { api } from "../../data"
 import { validateInput } from "../../utils/validators"
+
+//This is needed so screen readers don't see main content when modal is opened.
+Modal.setAppElement('#root')
 
 export const Home = () => {
   const [cards, setCards] = useState([])
@@ -24,6 +30,8 @@ export const Home = () => {
   const [errorMessage, setErrorMessage] = useState("")
   const [titleValid, setTitleValid] = useState(true)
   const [descriptionValid, setDescriptionValid] = useState(true)
+  const [modalTitle, setModalTitle] = useState("")
+  const [modalDescription, setModalDescription] = useState("")
 
   useEffect(() => {
     api.get("/cards")
@@ -98,6 +106,27 @@ export const Home = () => {
     }
 
   }
+  
+  const [modalIsOpen, setIsOpen] = React.useState(false);
+
+  function openModal(id) {
+    setIsOpen(true);
+    api.get(`/cards/${id}`)
+      .then(({ data }) => {
+        setModalTitle(data.title)
+        setModalDescription(data.description)
+      })
+
+  }
+
+  function afterOpenModal() {
+    // references are now sync'd and can be accessed.
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
 
   return (
     <Box>
@@ -107,14 +136,21 @@ export const Home = () => {
       {cards.map(({ title, description, id }, index) => (
         <Box key={id}>
           <Card variant="outlined">
-            <CardContent>
+            <CardContent onClick={() => openModal(id)}>
               <Typography>title: {title}</Typography>
-              <Typography>description: {description}</Typography>
               <IconButton onClick={() => deleteCard(id, index)}>
                 <Delete />
               </IconButton>
             </CardContent>
           </Card>
+          <Modal
+          isOpen={modalIsOpen}
+          onAfterOpen={afterOpenModal}
+          onRequestClose={closeModal}
+          contentLabel="Card Modal">
+            <Typography>title: {modalTitle}</Typography>
+            <Typography>description: {modalDescription}</Typography>
+          </Modal>
         </Box>
       ))}
       <form onSubmit={addCard}>
@@ -126,3 +162,4 @@ export const Home = () => {
     </Box>
   )
 }
+
