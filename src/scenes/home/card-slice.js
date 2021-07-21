@@ -7,6 +7,7 @@ export const cardSlice = createSlice({
   },
   reducers: {
     set: (state, { payload }) => {
+      console.log("cardSlice.set", payload);
       state.value = payload;
     },
     add: (state, { payload }) => {

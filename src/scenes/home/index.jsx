@@ -11,8 +11,9 @@ import {
   IconButton,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import { Delete } from "@material-ui/icons";
+import { Delete, Undo, Redo } from "@material-ui/icons";
 import { useSelector, useDispatch } from "react-redux";
+import { ActionCreators } from "redux-undo";
 
 import { api } from "../../data";
 import { add, set, remove } from "./card-slice.js";
@@ -26,7 +27,11 @@ export const Home = () => {
   const [titleValid, setTitleValid] = useState(true);
   const [descriptionValid, setDescriptionValid] = useState(true);
 
-  const cards = useSelector(({ cardReducer }) => cardReducer.value);
+  // grab the cards from the redux store
+  const cardsWithHistory = useSelector(({ cards }) => cards);
+  const { past, present, future } = cardsWithHistory;
+  const cards = present.value;
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -98,6 +103,19 @@ export const Home = () => {
       {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
       {loading && <CircularProgress />}
 
+      <IconButton
+        onClick={() => dispatch(ActionCreators.undo())}
+        disabled={past.length === 0}
+      >
+        <Undo />
+      </IconButton>
+      <IconButton
+        onClick={() => dispatch(ActionCreators.redo())}
+        disabled={future.length === 0}
+      >
+        <Redo />
+      </IconButton>
+
       {cards.map(({ title, description, id }) => (
         <Box key={id}>
           <Card variant="outlined">
@@ -133,6 +151,7 @@ export const Home = () => {
         >
           Add card
         </Button>
+
         <FormHelperText error={!titleValid || !descriptionValid}>
           Please don't use any naughty words
         </FormHelperText>
