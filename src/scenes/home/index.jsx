@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { ActionCreators } from "redux-undo";
 import {
   Button,
   Typography,
@@ -12,7 +13,7 @@ import {
   IconButton,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import { Delete } from "@material-ui/icons";
+import { Delete, Undo, Redo } from "@material-ui/icons";
 
 import { api } from "../../data";
 import { addCard, removeCard, setCards } from "./reducers.js";
@@ -26,7 +27,10 @@ export const Home = () => {
   const [titleValid, setTitleValid] = useState(true);
   const [descriptionValid, setDescriptionValid] = useState(true);
 
-  const cards = useSelector(({ cards }) => cards.value);
+  const cardsSlice = useSelector(({ cards }) => cards);
+  const { past, present, future } = cardsSlice;
+  const cards = present.value;
+
   const dispatch = useDispatch();
 
   // iniital API call to get all cards
@@ -98,6 +102,18 @@ export const Home = () => {
     <Box>
       {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
       {loading && <CircularProgress />}
+      <IconButton
+        disabled={past.length === 0}
+        onClick={() => dispatch(ActionCreators.undo())}
+      >
+        <Undo />
+      </IconButton>
+      <IconButton
+        disabled={future.length === 0}
+        onClick={() => dispatch(ActionCreators.redo())}
+      >
+        <Redo />
+      </IconButton>
 
       {cards.map(({ title, description, id }, index) => (
         <Box key={id}>
