@@ -1,17 +1,22 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import '@fontsource/roboto'
-import { CssBaseline } from '@material-ui/core'
+import React from "react";
+import ReactDOM from "react-dom";
+import "@fontsource/roboto";
+import { CssBaseline } from "@material-ui/core";
+import { Provider } from "react-redux";
 
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { store } from "./redux/store.js";
+// add our redux store
 
 ReactDOM.render(
   <React.StrictMode>
     <CssBaseline />
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function
